@@ -1,1 +1,350 @@
-component
+
+import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import React from "react";
+import { AdapterDateFnsJalali } from "@mui/x-date-pickers/AdapterDateFnsJalali";
+import localeFont from "next/font/local";
+import { IoClose } from "react-icons/io5";
+import {
+  getJalaliDayTitle,
+  gregorianIsoToJalaali,
+} from "@/services/utilities/formatHelper";
+const vazirFont = localeFont({
+  src: [
+    {
+      path: "../../public/fonts/vazir-font-v16.1.0/Farsi-Digits-Without-Latin/Vazir-Light-FD-WOL.ttf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/vazir-font-v16.1.0/Farsi-Digits-Without-Latin/Vazir-Medium-FD-WOL.ttf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/vazir-font-v16.1.0/Farsi-Digits-Without-Latin/Vazir-Bold-FD-WOL.ttf",
+      weight: "800",
+      style: "normal",
+    },
+  ],
+});
+const DatePicker = ({
+  width,
+  containerClassName,
+  withoutLabel,
+  label,
+  labelDir,
+  name,
+  onChange,
+  value,
+  disabled,
+  helperText,
+  withoutHelper,
+  placeholder,
+  onClear,
+  ...props
+}) => {
+  const getWeekTitle = (day) => {
+    const persianDay = getJalaliDayTitle(
+      gregorianIsoToJalaali(new Date(day).toISOString())
+    );
+    switch (persianDay) {
+      case "شنبه":
+        return (
+          <div
+            className={`text-[14px] font-bold select-none text-subTitle ${vazirFont.className}`}
+            dir="rtl"
+          >
+            ش
+          </div>
+        );
+      case "یکشنبه":
+        return (
+          <div
+            className={`text-[14px] font-bold select-none text-subTitle ${vazirFont.className}`}
+            dir="rtl"
+          >
+            1ش
+          </div>
+        );
+      case "دوشنبه":
+        return (
+          <div
+            className={`text-[14px] font-bold select-none text-subTitle ${vazirFont.className}`}
+            dir="rtl"
+          >
+            2ش
+          </div>
+        );
+      case "سه شنبه":
+        return (
+          <div
+            className={`text-[14px] font-bold select-none text-subTitle ${vazirFont.className}`}
+            dir="rtl"
+          >
+            3ش
+          </div>
+        );
+      case "چهارشنبه":
+        return (
+          <div
+            className={`text-[14px] font-bold select-none text-subTitle ${vazirFont.className}`}
+            dir="rtl"
+          >
+            4ش
+          </div>
+        );
+      case "پنجشنبه":
+        return (
+          <div
+            className={`text-[14px] font-bold select-none text-subTitle ${vazirFont.className}`}
+            dir="rtl"
+          >
+            5ش
+          </div>
+        );
+      case "جمعه":
+        return (
+          <div
+            className={`text-[14px] font-bold select-none text-subTitle ${vazirFont.className}`}
+            dir="rtl"
+          >
+            ج
+          </div>
+        );
+    }
+  };
+  return (
+    <div
+      className={`${width ? width : "w-full"} ${
+        containerClassName ? containerClassName : ""
+      } select-none flex flex-col gap-y-1`}
+    >
+      {withoutLabel ? null : (
+        <label
+          dir={labelDir ? labelDir : "rtl"}
+          className="text-[13.5px] text-subTitle font-[500]"
+        >
+          {label ? label : <>&nbsp;</>}
+        </label>
+      )}
+      <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
+        <div className="relative">
+          <DesktopDatePicker
+            {...props}
+            name={name}
+            onChange={onChange}
+            value={value}
+            disabled={disabled}
+            className={`transition-all duration-200`}
+            formatDensity="dense"
+            dayOfWeekFormatter={getWeekTitle}
+            sx={{
+              direction: "ltr",
+              width: "100%",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "12px",
+                height: "36px",
+                fontSize: "14px",
+                fontFamily: vazirFont.style,
+                color: "#2F2F2F",
+                background: disabled ? "#f5f5f4" : "#e0e4e77e",
+                boxShadow: disabled
+                  ? "none"
+                  : "inset 4px 3px 3px 0px #b8c7dd, -2px -4px 4px 0px #ffffff",
+                border: disabled ? "1px solid #e7e5e4" : "none",
+                fieldset: {
+                  border: "none",
+                  cursor: disabled ? "not-allowed" : "auto",
+                },
+                "&:hover fieldset": {
+                  border: "none",
+                },
+                "&.Mui-focused fieldset": {
+                  border: "none",
+                },
+              },
+            }}
+            slotProps={{
+              popper: {
+                sx: {
+                  fontFamily: vazirFont.style,
+                  "& .MuiPickersDay-dayWithMargin": {
+                    fontFamily: vazirFont.style,
+                    fontSize: "14px",
+                  },
+                  "& .MuiPickersYear-yearButton": {
+                    fontFamily: vazirFont.style,
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  },
+                },
+              },
+              textField: placeholder
+                ? {
+                    size: "small",
+                    placeholder: placeholder,
+                  }
+                : {
+                    size: "small",
+                  },
+              calendarHeader: {
+                sx: {
+                  direction: "ltr",
+                },
+              },
+              desktopPaper: {
+                sx: {
+                  fontFamily: vazirFont.style,
+                  background: "#f5f5f4",
+                  color: "#2F2F2F",
+                },
+              },
+              mobilePaper: {
+                sx: {
+                  fontFamily: vazirFont.style,
+                  background: "#f5f5f4",
+                  color: "#2F2F2F",
+                },
+              },
+              day: {
+                sx: {
+                  color: "#2F2F2F",
+                },
+              },
+              nextIconButton: {
+                sx: { color: "#2F2F2F" },
+              },
+              previousIconButton: {
+                sx: { color: "#2F2F2F" },
+              },
+              switchViewIcon: {
+                sx: { color: "#2F2F2F" },
+              },
+              toolbar: {
+                hidden: true,
+              },
+              layout: {
+                sx: {
+                  fontFamily: vazirFont.style,
+                  "& .MuiPickersCalendarHeader-label": {
+                    fontFamily: vazirFont.style,
+                    fontWeight: 200,
+                    userSelect: "none",
+                  },
+                },
+              },
+            }}
+            slots={{
+              openPickerIcon: () => {
+                return (
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8 2V5"
+                      className="stroke-dark dark:stroke-subTitle"
+                      strokeWidth="1.5"
+                      strokeMiterlimit="10"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M16 2V5"
+                      className="stroke-dark dark:stroke-subTitle"
+                      strokeWidth="1.5"
+                      strokeMiterlimit="10"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M3.5 9.08984H20.5"
+                      className="stroke-dark dark:stroke-subTitle"
+                      strokeWidth="1.5"
+                      strokeMiterlimit="10"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z"
+                      className="stroke-dark dark:stroke-subTitle"
+                      strokeWidth="1.5"
+                      strokeMiterlimit="10"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M15.6976 13.6992H15.7066"
+                      className="stroke-dark dark:stroke-subTitle"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M15.6976 16.6992H15.7066"
+                      className="stroke-dark dark:stroke-subTitle"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M11.9945 13.6992H12.0035"
+                      className="stroke-dark dark:stroke-subTitle"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M11.9945 16.6992H12.0035"
+                      className="stroke-dark dark:stroke-subTitle"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M8.29138 13.6992H8.30036"
+                      className="stroke-dark dark:stroke-subTitle"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M8.29138 16.6992H8.30036"
+                      className="stroke-dark dark:stroke-subTitle"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                );
+              },
+            }}
+          />
+          {value && onClear && !disabled ? (
+            <button
+              onClick={onClear}
+              className="absolute top-0 bottom-0 aspect-square right-[40px] rounded-[50%] flex justify-center items-center hover:bg-[#a0aec033] transition-all duration-200"
+            >
+              <IoClose className="text-[20px] text-[#2D3748]" />
+            </button>
+          ) : null}
+        </div>
+      </LocalizationProvider>
+      {withoutHelper ? null : (
+        <div
+          className="w-full text-[11px] font-[600] transition-all duration-200 text-danger"
+          dir="rtl"
+        >
+          {helperText ? helperText : <>&nbsp;</>}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default DatePicker;
+
+
